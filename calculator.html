@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MADE BY JAI CALCULATOR</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #89fffd, #ef32d9);
+            color: #333;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+            width: 360px;
+        }
+        .display {
+            width: 100%;
+            height: 80px;
+            background-color: #000;
+            color: #00ff00;
+            text-align: right;
+            font-size: 2.5rem;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        .button {
+            height: 60px;
+            background-color: #444;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+        }
+        .button:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        .button.operator {
+            background-color: #ff9500;
+        }
+        .button.operator:active {
+            background-color: #e08300;
+        }
+        .button.zero {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div id="display" class="display">0</div>
+        <div class="buttons">
+            <button class="button" onclick="appendNumber('1')">1</button>
+            <button class="button" onclick="appendNumber('2')">2</button>
+            <button class="button" onclick="appendNumber('3')">3</button>
+            <button class="button operator" onclick="chooseOperator('+')">+</button>
+            <button class="button" onclick="appendNumber('4')">4</button>
+            <button class="button" onclick="appendNumber('5')">5</button>
+            <button class="button" onclick="appendNumber('6')">6</button>
+            <button class="button operator" onclick="chooseOperator('-')">-</button>
+            <button class="button" onclick="appendNumber('7')">7</button>
+            <button class="button" onclick="appendNumber('8')">8</button>
+            <button class="button" onclick="appendNumber('9')">9</button>
+            <button class="button operator" onclick="chooseOperator('*')">*</button>
+            <button class="button zero" onclick="appendNumber('0')">0</button>
+            <button class="button" onclick="appendDecimal()">.</button>
+            <button class="button operator" onclick="chooseOperator('/')">/</button>
+            <button class="button operator" onclick="calculateResult()">=</button>
+            <button class="button operator" onclick="calculateSquareRoot()">√</button>
+            <button class="button operator" onclick="calculatePercentage()">%</button>
+            <button class="button" onclick="clearDisplay()">C</button>
+            <button class="button operator" onclick="calculateSin()">sin</button>
+            <button class="button operator" onclick="calculateCos()">cos</button>
+            <button class="button operator" onclick="calculateTan()">tan</button>
+            <button class="button operator" onclick="calculatePower()">x^y</button>
+            <button class="button operator" onclick="memoryClear()">MC</button>
+            <button class="button operator" onclick="memoryRecall()">MR</button>
+            <button class="button operator" onclick="memoryAdd()">M+</button>
+            <button class="button operator" onclick="memorySubtract()">M-</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let currentNumber = '';
+        let previousNumber = '';
+        let operator = null;
+        let memory = 0;
+
+        function appendNumber(number) {
+            currentNumber += number;
+            display.innerText = currentNumber;
+        }
+
+        function appendDecimal() {
+            if (!currentNumber.includes('.')) {
+                currentNumber += '.';
+                display.innerText = currentNumber;
+            }
+        }
+
+        function chooseOperator(op) {
+            if (currentNumber === '') return;
+            if (previousNumber !== '') {
+                calculateResult();
+            }
+            operator = op;
+            previousNumber = currentNumber;
+            currentNumber = '';
+        }
+
+        function calculateResult() {
+            let result;
+            const prev = parseFloat(previousNumber);
+            const current = parseFloat(currentNumber);
+            if (isNaN(prev) || isNaN(current)) return;
+            switch (operator) {
+                case '+':
+                    result = prev + current;
+                    break;
+                case '-':
+                    result = prev - current;
+                    break;
+                case '*':
+                    result = prev * current;
+                    break;
+                case '/':
+                    result = prev / current;
+                    break;
+                case 'x^y':
+                    result = Math.pow(prev, current);
+                    break;
+                default:
+                    return;
+            }
+            currentNumber = result.toString();
+            operator = null;
+            previousNumber = '';
+            display.innerText = currentNumber;
+        }
+
+        function clearDisplay() {
+            currentNumber = '';
+            previousNumber = '';
+            operator = null;
+            display.innerText = '0';
+        }
+
+        function calculateSquareRoot() {
+            if (currentNumber === '') return;
+            currentNumber = Math.sqrt(parseFloat(currentNumber)).toString();
+            display.innerText = currentNumber;
+        }
+
+        function calculatePercentage() {
+            if (currentNumber === '') return;
+            currentNumber = (parseFloat(currentNumber) / 100).toString();
+            display.innerText = currentNumber;
+        }
+
+        function calculateSin() {
+            if (currentNumber === '') return;
+            currentNumber = Math.sin(parseFloat(currentNumber)).toString();
+            display.innerText = currentNumber;
+        }
+
+        function calculateCos() {
+            if (currentNumber === '') return;
+            currentNumber = Math.cos(parseFloat(currentNumber)).toString();
+            display.innerText = currentNumber;
+        }
+
+        function calculateTan() {
+            if (currentNumber === '') return;
+            currentNumber = Math.tan(parseFloat(currentNumber)).toString();
+            display.innerText = currentNumber;
+        }
+
+        function memoryClear() {
+            memory = 0;
+        }
+
+        function memoryRecall() {
+            currentNumber = memory.toString();
+            display.innerText = currentNumber;
+        }
+
+        function memoryAdd() {
+            memory += parseFloat(currentNumber);
+        }
+
+        function memorySubtract() {
+            memory -= parseFloat(currentNumber);
+        }
+    </script>
+</body>
+</html>
